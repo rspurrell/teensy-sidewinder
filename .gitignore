@@ -34,3 +34,6 @@
 
 # Hex file
 *.hex
+
+# VS Code Settings
+.vscode/settings.json
