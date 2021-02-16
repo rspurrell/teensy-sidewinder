@@ -13,13 +13,13 @@ BUILDDIR = build
 BINDIR = bin
 
 # The name of your project (used to name the compiled .hex file)
-TARGET = main
+TARGET = sidewinder
 
 # options needed by many Arduino libraries to configure for Teensy 3.x/4.x
 DEFINES = -DARDUINO=10813 -DTEENSYDUINO=153
 
 # configurable options
-DEFINES += -DUSB_SERIAL -DLAYOUT_US_ENGLISH -DUSING_MAKEFILE
+DEFINES += -DUSB_SERIAL_HID -DLAYOUT_US_ENGLISH -DUSING_MAKEFILE -DDEBUG
 #
 # USB Type configuration:
 #   -DUSB_SERIAL
