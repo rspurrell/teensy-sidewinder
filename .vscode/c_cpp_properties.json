@@ -1,0 +1,155 @@
+{
+    "env": {
+        // Linux/WSL/Windows standalone tools path
+        //"toolsPath": "${workspaceFolder}/tools",
+        
+        // Linux/WSL Teensyduino install path
+        //"toolsPath": "/home/YOUR_USER_FOLDER/arduino_ide/arduino-1.8.13/hardware/tools",
+        
+        // Windows Teensyduino install path
+        "toolsPath": "${ProgramFiles(x86)}/Arduino/hardware/tools",
+
+        // Linux/WSL
+        //"compilerPath": "${toolsPath}/arm/bin/arm-none-eabi-gcc",
+        
+        // Windows
+        "compilerPath": "${toolsPath}/arm/bin/arm-none-eabi-gcc.exe",
+
+        "commonDefines": [
+            "DEBUG",
+            "USB_SERIAL",
+            "LAYOUT_US_ENGLISH",
+            "USING_MAKEFILE",
+            "ARDUINO=10813",
+            "TEENSYDUINO=153"
+        ],
+        "commonIncludes": [
+            "${workspaceFolder}/src/**",
+            "${workspaceFolder}/libraries/**",
+            "${toolsPath}/arm/**"
+        ],
+        "teensy3IncludePath": [
+            "${workspaceFolder}/cores/teensy3/**"
+        ],
+        "teensy4IncludePath": [
+            "${workspaceFolder}/cores/teensy4/**"
+        ]
+    },
+    "configurations": [
+        {
+            "name": "Teensy LC",
+            "includePath": [
+                "${commonIncludes}",
+                "${teensy3IncludePath}"
+            ],
+            "defines": [
+                "${commonDefines}",
+                "__MKL26Z64__",
+                "F_CPU=48000000"
+            ],
+            "compilerPath": "${compilerPath}",
+            "cStandard": "gnu11",
+            "cppStandard": "gnu++14",
+            "intelliSenseMode": "gcc-arm"
+        },
+        {
+            "name": "Teensy 3.0",
+            "includePath": [
+                "${commonIncludes}",
+                "${teensy3IncludePath}"
+            ],
+            "defines": [
+                "${commonDefines}",
+                "__MK20DX128__",
+                "F_CPU=48000000"
+            ],
+            "compilerPath": "${compilerPath}",
+            "cStandard": "gnu11",
+            "cppStandard": "gnu++14",
+            "intelliSenseMode": "gcc-arm"
+        },
+        {
+            "name": "Teensy 3.1 & 3.2",
+            "includePath": [
+                "${commonIncludes}",
+                "${teensy3IncludePath}"
+            ],
+            "defines": [
+                "${commonDefines}",
+                "__MK20DX256__",
+                "F_CPU=72000000"
+            ],
+            "compilerPath": "${compilerPath}",
+            "cStandard": "gnu11",
+            "cppStandard": "gnu++14",
+            "intelliSenseMode": "gcc-arm"
+        },
+        {
+            "name": "Teensy 3.5",
+            "includePath": [
+                "${commonIncludes}",
+                "${teensy3IncludePath}"
+            ],
+            "defines": [
+                "${commonDefines}",
+                "__MK64FX512__",
+                "F_CPU=120000000"
+            ],
+            "compilerPath": "${compilerPath}",
+            "cStandard": "gnu11",
+            "cppStandard": "gnu++14",
+            "intelliSenseMode": "gcc-arm"
+        },
+        {
+            "name": "Teensy 3.6",
+            "includePath": [
+                "${commonIncludes}",
+                "${teensy3IncludePath}"
+            ],
+            "defines": [
+                "${commonDefines}",
+                "__MK66FX1M0__",
+                "F_CPU=180000000"
+            ],
+            "compilerPath": "${compilerPath}",
+            "cStandard": "gnu11",
+            "cppStandard": "gnu++14",
+            "intelliSenseMode": "gcc-arm"
+        },
+        {
+            "name": "Teensy 4.0",
+            "includePath": [
+                "${commonIncludes}",
+                "${teensy4IncludePath}"
+            ],
+            "defines": [
+                "${commonDefines}",
+                "__IMXRT1062__",
+                "F_CPU=600000000",
+                "ARDUINO_TEENSY40"
+            ],
+            "compilerPath": "${compilerPath}",
+            "cStandard": "gnu11",
+            "cppStandard": "gnu++14",
+            "intelliSenseMode": "gcc-arm"
+        },
+        {
+            "name": "Teensy 4.1",
+            "includePath": [
+                "${commonIncludes}",
+                "${teensy4IncludePath}"
+            ],
+            "defines": [
+                "${commonDefines}",
+                "__IMXRT1062__",
+                "F_CPU=600000000",
+                "ARDUINO_TEENSY41"
+            ],
+            "compilerPath": "${compilerPath}",
+            "cStandard": "gnu11",
+            "cppStandard": "gnu++14",
+            "intelliSenseMode": "gcc-arm"
+        }
+    ],
+    "version": 4
+}
