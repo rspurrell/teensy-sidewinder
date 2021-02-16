@@ -1,23 +1,11 @@
 {
     "env": {
-        // Linux/WSL/Windows standalone tools path
-        //"toolsPath": "${workspaceFolder}/tools",
-        
-        // Linux/WSL Teensyduino install path
-        //"toolsPath": "/home/YOUR_USER_FOLDER/arduino_ide/arduino-1.8.13/hardware/tools",
-        
-        // Windows Teensyduino install path
         "toolsPath": "${ProgramFiles(x86)}/Arduino/hardware/tools",
-
-        // Linux/WSL
-        //"compilerPath": "${toolsPath}/arm/bin/arm-none-eabi-gcc",
-        
-        // Windows
         "compilerPath": "${toolsPath}/arm/bin/arm-none-eabi-gcc.exe",
 
         "commonDefines": [
             "DEBUG",
-            "USB_SERIAL",
+            "USB_SERIAL_HID",
             "LAYOUT_US_ENGLISH",
             "USING_MAKEFILE",
             "ARDUINO=10813",
