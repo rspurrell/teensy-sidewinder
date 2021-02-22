@@ -9,12 +9,16 @@ extern "C" int main(void)
 #ifdef USING_MAKEFILE
 
 #ifdef DEBUG
-    while (!Serial || !Serial.availableForWrite());
     Serial.begin(9600);
+    while (!Serial.availableForWrite());
     Serial.println("Debug serial connected");
+    delay(1000);
 #endif
 
     Joystick.useManualSend(true);
+
+    pinMode(LED_BUILTIN, OUTPUT);
+    digitalWriteFast(LED_BUILTIN, LOW);
 
     Sidewinder sw(PIN_SW_CLOCK, PIN_SW_TRIGGER, PIN_SW_DATA);
 
@@ -28,60 +32,42 @@ extern "C" int main(void)
 #endif
 
         // retrieve sidewinder packet
-		packet = sw.Poll();
+        packet = sw.Poll();
 
-		// validate packet
-		bool isPacketValid = sw.CheckParity(packet);
-#ifdef DEBUG	
-		Serial.printf("Packet valid: %d\r\n", isPacketValid);
+        // validate packet
+        bool isPacketValid = sw.CheckParity(packet);
+#ifdef DEBUG    
+        Serial.printf("Packet valid: %d\r\n", isPacketValid);
 #endif
         if (!isPacketValid)
         {
+            digitalWriteFast(LED_BUILTIN, HIGH);
             continue; // packet parity check failed
         }
+        digitalWriteFast(LED_BUILTIN, LOW);
 
         // axis
         Joystick.X(packet.XAxis());
         Joystick.Y(packet.YAxis());
-        Joystick.Zrotate(((packet.Rotation() + 1) << 4) - 1);
-        Joystick.slider(((packet.Throttle() + 1) << 3) - 1);
+        Joystick.Zrotate(packet.Rotation());
+        Joystick.slider(packet.Throttle());
 
         // hat
-        int16_t angle = -1;
-        if (packet.Head() > 0)
-        {
-            uint8_t h = packet.Head();
-            if (h == 1)
-                h = 9;
-            h--;
-            angle = h * 45;
-        }
-        Joystick.hat(angle);
+        Joystick.hat(packet.Head(), !packet.Shift());
 
         // buttons
-        uint8_t shift = !packet.Shift() << 3;
-        uint8_t btns = packet.bytes[0];
-        for (size_t i = 0; i < 8; i++)
-        {
-            // clear current button value
-            Joystick.button(i + 1, 0);
-            Joystick.button((i | 8) + 1, 0);
-
-            // set new button value
-            Joystick.button((i | shift) + 1, !(btns >> i & 1));
-        }
+        Joystick.buttons(~packet.bytes[0], !packet.Shift());
 
         // send packet data to usb output to pc
         Joystick.send_now();
 
-		// delay before next update
-#ifndef DEBUG
-		delay(4);
-#else
-		Serial.printf("Cycle time: %d\r\n", (uint32_t)elapsed);
+#ifdef DEBUG
+        Serial.printf("Cycle time: %d\r\n", (uint32_t)elapsed);
+        delay(30); // delay to allow terminal to catch up and show results consistently
 #endif
+        // delay before next update
+        delay(4);
     }
 
 #endif
 }
-

@@ -1,6 +1,7 @@
 #ifndef TeensySidewinder
 #define TeensySidewinder
 
+#include "usb_sidewinder.h"
 #include <Arduino.h>
 
 #define PACKET_DATA_BYTES_COUNT 6

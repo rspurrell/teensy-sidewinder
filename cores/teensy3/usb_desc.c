@@ -237,7 +237,9 @@ static uint8_t mouse_report_desc[] = {
 #endif
 
 #ifdef JOYSTICK_INTERFACE
-#if JOYSTICK_SIZE == 12
+#if JOYSTICK_SIZE == 8
+#include "hid_sidewinder.c"
+#elif JOYSTICK_SIZE == 12
 static uint8_t joystick_report_desc[] = {
         0x05, 0x01,                     // Usage Page (Generic Desktop)
         0x09, 0x04,                     // Usage (Joystick)
