@@ -6,8 +6,6 @@
 
 extern "C" int main(void)
 {
-#ifdef USING_MAKEFILE
-
 #ifdef DEBUG
     Serial.begin(9600);
     while (!Serial.availableForWrite());
@@ -68,6 +66,4 @@ extern "C" int main(void)
         // delay before next update
         delay(4);
     }
-
-#endif
 }

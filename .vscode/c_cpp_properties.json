@@ -7,7 +7,6 @@
             "DEBUG",
             "USB_SERIAL_SIDEWINDER_HID",
             "LAYOUT_US_ENGLISH",
-            "USING_MAKEFILE",
             "ARDUINO=10813",
             "TEENSYDUINO=153"
         ],
