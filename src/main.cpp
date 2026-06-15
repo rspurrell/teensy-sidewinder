@@ -1,14 +1,14 @@
-#include "sidewinder.h"
+#include "main.hpp"
 
 #define PIN_SW_CLOCK CORE_RXD1_PIN
 #define PIN_SW_DATA CORE_RXD0_PIN
-#define PIN_SW_TRIGGER CORE_TXD1_PIN
+#define PIN_SW_TRIGGER CORE_RXD2_PIN
 
 extern "C" int main(void)
 {
 #ifdef DEBUG
+    while (!Serial || !Serial.availableForWrite());
     Serial.begin(9600);
-    while (!Serial.availableForWrite());
     Serial.println("Debug serial connected");
     delay(1000);
 #endif
@@ -21,7 +21,7 @@ extern "C" int main(void)
     Sidewinder sw(PIN_SW_CLOCK, PIN_SW_TRIGGER, PIN_SW_DATA);
 
     delay(1000);
-    
+
     sw_data_t packet;
     while (1)
     {
@@ -33,8 +33,8 @@ extern "C" int main(void)
         packet = sw.Poll();
 
         // validate packet
-        bool isPacketValid = sw.CheckParity(packet);
-#ifdef DEBUG    
+        bool isPacketValid = Sidewinder::CheckParity(packet);
+#ifdef DEBUG
         Serial.printf("Packet valid: %d\r\n", isPacketValid);
 #endif
         if (!isPacketValid)

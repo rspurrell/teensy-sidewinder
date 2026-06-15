@@ -1,18 +1,21 @@
-#include "sidewinder.h"
+#include "sidewinder.hpp"
 
 const sw_data_t Sidewinder::SW_DATA_EMPTY = {};
 
 Sidewinder::Sidewinder(uint8_t pinClock, uint8_t pinTrigger, uint8_t pinData)
 {
-    pin_clock = pinClock;
-    pinMode(pin_clock, INPUT);
+    _pinClock = pinClock;
+    pinMode(_pinClock, INPUT);
 
-    pin_data = pinData;
-    pinMode(pin_data, INPUT);
+    _pinData = pinData;
+    pinMode(_pinData, INPUT);
 
-    pin_trigger = pinTrigger;
-    pinMode(pin_trigger, OUTPUT);
-    digitalWriteFast(pin_trigger, LOW);
+    _pinTrigger = pinTrigger;
+
+    // input-output mode flip method
+    pinMode(_pinTrigger, INPUT);
+    // Set to low now so that whenever the pin mode flips to OUTPUT, it pulls LOW immediately.
+    digitalWriteFast(_pinTrigger, LOW);
 }
 
 Sidewinder::~Sidewinder(){}
@@ -39,18 +42,18 @@ sw_data_t Sidewinder::Poll()
     sw_data_t volatile p = SW_DATA_EMPTY;
     uint32_t clkFlip, bitsRead, bytesRead;
     clkFlip = bitsRead = bytesRead = 0;
-        
-    digitalWriteFast(pin_trigger, HIGH);
+
+    pinMode(_pinTrigger, OUTPUT);
 	delayMicroseconds(TRIGGER_HOLD);
-    digitalWriteFast(pin_trigger, LOW);
+    pinMode(_pinTrigger, INPUT);
 
     uint8_t volatile b;
     elapsedMicros elapsed;
     do
     {
-        if (clkFlip && digitalReadFast(pin_clock))
+        if (clkFlip && digitalReadFast(_pinClock))
         {
-            b = digitalReadFast(pin_data);
+            b = digitalReadFast(_pinData);
             p.bytes[bytesRead] |= b << bitsRead;
             bitsRead++;
             if (bitsRead == 8)
@@ -60,7 +63,7 @@ sw_data_t Sidewinder::Poll()
             }
             clkFlip = 0;
         }
-        else if (!clkFlip && !digitalReadFast(pin_clock))
+        else if (!clkFlip && !digitalReadFast(_pinClock))
         {
             clkFlip = 1;
         }
@@ -72,14 +75,14 @@ sw_data_t Sidewinder::Poll()
     } while (elapsed < TIMEOUT);
 
 #ifdef DEBUG
-    debug((sw_data_t&)p, bytesRead, elapsed);
+    Debug((sw_data_t&)p, bytesRead, elapsed);
 #endif
 
     return (sw_data_t&)p;
 }
 
 #ifdef DEBUG
-void Sidewinder::debug(sw_data_t p, uint32_t bytesRead, uint32_t elapsed)
+void Sidewinder::Debug(sw_data_t p, uint32_t bytesRead, uint32_t elapsed) const
 {
     Serial.printf("\r\nBytes read: ");
     Serial.printf(bytesRead < 6 ? "TIMEOUT" : "%d in %d", bytesRead, elapsed);

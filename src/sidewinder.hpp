@@ -30,7 +30,7 @@ typedef struct
     const uint8_t C() const { return bytes[0] >> 6 & 0x01; }
     // bit  8
     const uint8_t D() const { return bytes[0] >> 7 & 0x01; }
-        
+
     // bit  9
     const uint8_t Shift() const { return bytes[1] & 0x01; }
 
@@ -56,18 +56,18 @@ class Sidewinder
 {
 private:
     static const sw_data_t SW_DATA_EMPTY;
-    uint8_t pin_clock, pin_trigger, pin_data;
+    uint8_t _pinClock, _pinTrigger, _pinData;
 
-    #ifdef DEBUG
-    void debug(sw_data_t p, uint32_t bytesRead, uint32_t elapsed);
-    #endif
+#ifdef DEBUG
+    void Debug(sw_data_t p, uint32_t bytesRead, uint32_t elapsed) const;
+#endif
 
 public:
     Sidewinder(uint8_t pinClock, uint8_t pinTrigger, uint8_t pinData);
     ~Sidewinder();
 
     sw_data_t Poll();
-    bool CheckParity(sw_data_t p);
+    static bool CheckParity(sw_data_t p);
 };
 
 #endif
