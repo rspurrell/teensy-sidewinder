@@ -5,8 +5,14 @@
 #include <Arduino.h>
 
 #define PACKET_DATA_BYTES_COUNT 6
-#define TIMEOUT 1000 // 1 millisecond
-#define TRIGGER_HOLD 600 // microseconds
+#define TIMEOUT 5000 // 1 millisecond
+
+#define TRIGGER_HOLD_MIN 500 // microseconds
+#define TRIGGER_HOLD_MAX 1000 // microseconds
+#define TRIGGER_HOLD_INCREMENT 10 // microseconds
+
+#define READ_DELAY_MIN 0 // microseconds
+#define READ_DELAY_MAX 100 // microseconds
 
 typedef struct
 {
@@ -57,6 +63,10 @@ class Sidewinder
 private:
     static const sw_data_t SW_DATA_EMPTY;
     uint8_t _pinClock, _pinTrigger, _pinData;
+    uint32_t _triggerHold, _readDelay;
+    bool _lastPollTimedOut;
+
+    void IncrementTriggerHold();
 
 #ifdef DEBUG
     void Debug(sw_data_t p, uint32_t bytesRead, uint32_t elapsed) const;
@@ -68,6 +78,7 @@ public:
 
     sw_data_t Poll();
     static bool CheckParity(sw_data_t p);
+    void IncrementDelay();
 };
 
 #endif

@@ -40,6 +40,8 @@ extern "C" int main(void)
         if (!isPacketValid)
         {
             digitalWriteFast(LED_BUILTIN, HIGH);
+            sw.IncrementDelay();
+            delay(100);
             continue; // packet parity check failed
         }
         digitalWriteFast(LED_BUILTIN, LOW);

@@ -4,6 +4,10 @@ const sw_data_t Sidewinder::SW_DATA_EMPTY = {};
 
 Sidewinder::Sidewinder(uint8_t pinClock, uint8_t pinTrigger, uint8_t pinData)
 {
+    _lastPollTimedOut = true;
+    _triggerHold = TRIGGER_HOLD_MIN;
+    _readDelay = READ_DELAY_MIN;
+
     _pinClock = pinClock;
     pinMode(_pinClock, INPUT);
 
@@ -44,9 +48,10 @@ sw_data_t Sidewinder::Poll()
     clkFlip = bitsRead = bytesRead = 0;
 
     pinMode(_pinTrigger, OUTPUT);
-	delayMicroseconds(TRIGGER_HOLD);
+    delayMicroseconds(_triggerHold);
     pinMode(_pinTrigger, INPUT);
 
+    bool timedOut = false;
     uint8_t volatile b;
     elapsedMicros elapsed;
     do
@@ -72,18 +77,58 @@ sw_data_t Sidewinder::Poll()
             break;
         }
         delayMicroseconds(1);
-    } while (elapsed < TIMEOUT);
+        timedOut = elapsed > TIMEOUT;
+    } while (!timedOut);
 
 #ifdef DEBUG
     Debug((sw_data_t&)p, bytesRead, elapsed);
 #endif
 
+    if (timedOut)
+    {
+        _lastPollTimedOut = true;
+        IncrementTriggerHold();
+    }
+    else
+    {
+        _lastPollTimedOut = false;
+    }
+
     return (sw_data_t&)p;
+}
+
+void Sidewinder::IncrementTriggerHold()
+{
+    if (_triggerHold < TRIGGER_HOLD_MAX)
+    {
+        _triggerHold += TRIGGER_HOLD_INCREMENT;
+    }
+    else
+    {
+        _triggerHold = TRIGGER_HOLD_MIN;
+    }
+}
+
+void Sidewinder::IncrementDelay()
+{
+    if (!_lastPollTimedOut)
+    {
+        if (_readDelay < READ_DELAY_MAX)
+        {
+            _readDelay++;
+        }
+        else
+        {
+            _readDelay = READ_DELAY_MIN;
+        }
+    }
 }
 
 #ifdef DEBUG
 void Sidewinder::Debug(sw_data_t p, uint32_t bytesRead, uint32_t elapsed) const
 {
+    Serial.printf("\r\nTrigger hold: %d microseconds", _triggerHold);
+    Serial.printf("\r\nRead delay: %d microseconds", _readDelay);
     Serial.printf("\r\nBytes read: ");
     Serial.printf(bytesRead < 6 ? "TIMEOUT" : "%d in %d", bytesRead, elapsed);
     Serial.printf("\r\nTr:%d T:%d U:%d D:%d A:%d B:%d C:%d D:%d S:%d X:%4d Y:%4d Th:%3d R:%3d H:%d Chk:%d %d",
