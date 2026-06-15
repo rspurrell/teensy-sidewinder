@@ -3,6 +3,7 @@
 #define PIN_SW_CLOCK CORE_RXD1_PIN
 #define PIN_SW_DATA CORE_RXD0_PIN
 #define PIN_SW_TRIGGER CORE_RXD2_PIN
+#define PIN_SW_POWER_SWITCH CORE_INT19_PIN
 
 extern "C" int main(void)
 {
@@ -18,8 +19,20 @@ extern "C" int main(void)
     pinMode(LED_BUILTIN, OUTPUT);
     digitalWriteFast(LED_BUILTIN, LOW);
 
+    pinMode(PIN_SW_POWER_SWITCH, OUTPUT);
+    digitalWriteFast(PIN_SW_POWER_SWITCH, LOW);
+
     Sidewinder sw(PIN_SW_CLOCK, PIN_SW_TRIGGER, PIN_SW_DATA);
 
+#ifdef DEBUG
+    Serial.printf("\r\nPowering Sidewinder...");
+#endif
+    delay(1000);
+
+    digitalWriteFast(PIN_SW_POWER_SWITCH, HIGH);
+#ifdef DEBUG
+    Serial.printf("\r\nSidewinder powered on, waiting 1 second for it to initialize...");
+#endif
     delay(1000);
 
     sw_data_t packet;
