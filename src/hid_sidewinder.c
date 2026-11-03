@@ -70,7 +70,7 @@ static uint8_t joystick_report_desc[] = {
     0x81, 0x02,         //   INPUT (Data,Var,Abs)
 
     // filler
-    0x75, 0x07,         //     Report Size (6)
+    0x75, 0x07,         //     Report Size (7)
     0x95, 0x01,         //     Report Count (1)
     0x81, 0x03,         //   Input (Constant)
 
