@@ -30,13 +30,21 @@ static uint8_t joystick_report_desc[] = {
     0x29, 0x10,         //   USAGE_MAXIMUM (Button 16)
     0x81, 0x02,         //   INPUT (Data,Var,Abs)
 
-    // hat switches (2)
+    // hat switch 1
     0x15, 0x01,         //   LOGICAL_MINIMUM (1)
     0x25, 0x08,         //   LOGICAL_MAXIMUM (8)
     0x75, 0x04,         //   REPORT_SIZE (4)
-    0x95, 0x02,         //   REPORT_COUNT (2)
+    0x95, 0x01,         //   REPORT_COUNT (1)
     0x05, 0x01,         //   USAGE_PAGE (Generic Desktop)
     0x09, 0x39,         //   USAGE (Hat switch)
+    0x81, 0x42,         //   INPUT (Data,Var,Abs,Null)
+
+    // hat switch 2
+    0x15, 0x01,         //   LOGICAL_MINIMUM (1)
+    0x25, 0x08,         //   LOGICAL_MAXIMUM (8)
+    0x75, 0x04,         //   REPORT_SIZE (4)
+    0x95, 0x01,         //   REPORT_COUNT (1)
+    0x05, 0x01,         //   USAGE_PAGE (Generic Desktop)
     0x09, 0x39,         //   USAGE (Hat switch)
     0x81, 0x42,         //   INPUT (Data,Var,Abs,Null)
 
